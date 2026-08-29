@@ -168,18 +168,12 @@ void initAP(const char *apSsid, const char *apPassword)
 
     Serial.println();
     Serial.println("Modo configuracion WiFi");
+    Serial.print("Red: ");
+    Serial.println(apSsid);
+    Serial.print("IP: ");
+    Serial.println(WiFi.softAPIP());
 
-    server.on("/", handleRootWifi);
     server.on("/wifi", handleWifi);
-
-    server.begin();
-
-    Serial.println("Servidor AP iniciado");
-}
-
-void loopAP()
-{
-    server.handleClient();
 }
 
 //----------------------------------------------------
@@ -190,25 +184,30 @@ void intentoconexion(const char *apname, const char *appassword)
 {
     EEPROM.begin(512);
 
-    Serial.println("Ingreso a intentoconexion");
+    Serial.println("Iniciando conexion WiFi...");
 
-    if (!lastRed())
+    if (lastRed())
     {
-        Serial.println("No hay WiFi guardado");
+        Serial.println("WiFi conectado correctamente.");
+        Serial.print("IP: ");
+        Serial.println(WiFi.localIP());
 
-        Serial.println("Conectarse a:");
-        Serial.println(apname);
-
-        Serial.println("Abrir:");
-        Serial.println("192.168.4.1");
-
-        initAP(apname, appassword);
+        return;
     }
 
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        loopAP();
-    }
+    Serial.println("No se pudo conectar a una red guardada.");
+    Serial.println("Iniciando modo AP...");
+
+    initAP(apname, appassword);
+
+    Serial.println("=================================");
+    Serial.println("MODO AP ACTIVADO");
+    Serial.print("Red WiFi: ");
+    Serial.println(apname);
+    Serial.print("Password: ");
+    Serial.println(appassword);
+    Serial.print("IP: ");
+    Serial.println(WiFi.softAPIP());
+    Serial.println("=================================");
 }
-
 #endif
