@@ -410,7 +410,7 @@ void setup() {
 
     Serial.println("\nIniciando Blind Assistant");
 
-    intentoconexion("JE-WM", "Project1");
+    intentoconexion("BLIND_ASSISTANT", "12345678");
 
     Serial.println("\nIP: " + WiFi.localIP().toString());
 
@@ -419,7 +419,7 @@ void setup() {
     server.on("/set", handleSet);
     
     server.begin();
-    Serial.println("Servidor web iniciado con diseño en filas combinadas");
+    Serial.println("Servidor web iniciado");
 }
 
 //==================================================
@@ -443,6 +443,9 @@ void loop() {
         if(inferior<0) Serial.print("---"); else Serial.print(inferior);
         Serial.println();
     }
+
+    server.handleClient();
+}
 
     server.handleClient();
 }
